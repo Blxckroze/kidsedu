@@ -605,9 +605,14 @@ function checkTestAnswer() {
   if(!ans) return;
   const correct = ans === w.toLowerCase();
   inp.className = 'answer-input ' + (correct?'correct':'wrong');
-  document.getElementById('testFeedback').textContent = correct ? '🎉 Correct!' : '❌ It is "' + w + '"';
-  document.getElementById('testFeedback').className = 'feedback ' + (correct?'ok':'bad');
-  if(correct) testScore++;
+  if(correct){
+    document.getElementById('testFeedback').innerHTML = '🎉 Correct!';
+    document.getElementById('testFeedback').className = 'feedback ok';
+    testScore++;
+  } else {
+    document.getElementById('testFeedback').innerHTML = '❌ Not quite. <button class="btn purple" style="padding:4px 14px;font-size:0.85rem;margin-left:8px;" onclick="document.getElementById(\'testReveal\').style.display=\'inline\'">Show Answer</button><span id="testReveal" style="display:none;margin-left:10px;color:var(--accent);font-weight:800;">' + w + '</span>';
+    document.getElementById('testFeedback').className = 'feedback bad';
+  }
   testAnswers.push({word:w, given:ans, correct});
 }
 function nextTestWord() {
@@ -668,9 +673,15 @@ function checkFill(correct, override) {
   const inp = document.getElementById('blankInput');
   inp.value = val;
   inp.className = 'blank-input ' + (ok?'correct':'wrong');
-  if(ok) { fillScore++; document.getElementById('chip-'+correct)?.classList.add('used'); }
-  document.getElementById('fillFeedback').textContent = ok ? '✅ Nice! That is the right word.' : '❌ The answer was "' + correct + '"';
-  document.getElementById('fillFeedback').className = 'feedback ' + (ok?'ok':'bad');
+  if(ok){
+    document.getElementById('fillFeedback').innerHTML = '✅ Nice! That is the right word.';
+    document.getElementById('fillFeedback').className = 'feedback ok';
+    fillScore++;
+    document.getElementById('chip-'+correct)?.classList.add('used');
+  } else {
+    document.getElementById('fillFeedback').innerHTML = '❌ Not quite. <button class="btn purple" style="padding:4px 14px;font-size:0.85rem;margin-left:8px;" onclick="document.getElementById(\'fillReveal\').style.display=\'inline\'">Show Answer</button><span id="fillReveal" style="display:none;margin-left:10px;color:var(--accent);font-weight:800;">' + correct + '</span>';
+    document.getElementById('fillFeedback').className = 'feedback bad';
+  }
 }
 function nextFillWord() {
   fillIdx++;
